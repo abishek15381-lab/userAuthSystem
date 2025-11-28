@@ -53,7 +53,11 @@ export const login = async(req , res) => {
         }
         
         //generate token
-        const token =await jwt.sign({id: user.id , role:user.role} , process.env.SECRECTKEY , {expiresIn:"7d"});
+        const token =jwt.sign(
+                                { id: user._id, role: user.role },
+                                process.env.SECRECTKEY,
+                                { expiresIn: "7d" }   // or your value
+                            )
 
         res.json({
             message:"login sucessful",
@@ -72,7 +76,7 @@ export const getProfile = async (req,res) => {
    
    try {
     const user = User.findById(req.user.id).select("-password");
-    res.json(user);
+    res.json(req.user);
    } catch (error) {
     res.status(500).json({error:error.message})
    }
