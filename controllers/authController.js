@@ -2,13 +2,13 @@ import User from "../models/User.js";
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
 
-export const signup = async (req,res) => {
+export const signup = async (req,res,next) => {
     try {
         const {name , email , password} = req.body;
         
         const exists = await User.findOne({email});
         if (exists){
-            return res.status(400).json({message:"email already exists"});
+            return next(new Error("user already exists"));
         }
 
         const hashedPassword =await bcrypt.hash(password,10);
